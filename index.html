@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Mundo Mágico de los Cuentos</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- ZONA DE TEMAS Y ESTILOS GLOBALES --- */
+        :root {
+            --font-title: 'Pacifico', cursive;
+            --font-header: 'Fredoka One', cursive;
+            --font-body: 'Nunito', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            transition: background-color 0.5s ease, background-image 0.5s ease;
+            overflow-x: hidden;
+        }
+
+        /* Tema Guacatela (Mágico) */
+        .theme-guacatela {
+            --bg-color: #2c1338;
+            --primary-glow: #a855f7;
+            --secondary-glow: #22c55e;
+            --accent-glow: #f59e0b;
+            --text-color: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --bg-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%239c92ac' fill-opacity='0.1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        /* Tema Toxina (Eléctrico y Químico) */
+        .theme-toxina {
+            --bg-color: #14532d; /* Verde oscuro */
+            --primary-glow: #84cc16; /* Lima eléctrico */
+            --secondary-glow: #d946ef; /* Fucsia */
+            --accent-glow: #facc15; /* Amarillo advertencia */
+            --text-color: #ecfccb; /* Lima muy claro */
+            --card-bg: rgba(132, 204, 22, 0.1);
+            --card-border: rgba(132, 204, 22, 0.25);
+            --bg-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='%23bef264' fill-opacity='0.1'%3E%3Ccircle cx='50' cy='50' r='5'/%3E%3Ccircle cx='10' cy='10' r='3'/%3E%3Ccircle cx='90' cy='10' r='4'/%3E%3Ccircle cx='10' cy='90' r='2'/%3E%3Ccircle cx='90' cy='90' r='5'/%3E%3Ccircle cx='30' cy='70' r='3'/%3E%3Ccircle cx='70' cy='30' r='4'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* Tema Roñoso (Sucio y Desgastado) */
+        .theme-ronoso {
+            --bg-color: #422006; /* Marrón barro */
+            --primary-glow: #f97316; /* Naranja óxido */
+            --secondary-glow: #854d0e; /* Mostaza oscuro */
+            --accent-glow: #ca8a04; /* Ocre */
+            --text-color: #fef3c7; /* Hueso */
+            --card-bg: rgba(254, 243, 199, 0.1);
+            --card-border: rgba(254, 243, 199, 0.2);
+            --bg-image: url('https://www.transparenttextures.com/patterns/dirty-old-black-shirt.png');
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: var(--bg-image);
+        }
+
+        .main-container {
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            position: absolute;
+            width: 100%;
+            will-change: transform, opacity;
+        }
+        .main-container.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+
+        /* Estilos para las tarjetas de juego del menú principal */
+        .game-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            border-color: var(--primary-glow);
+        }
+        .game-card .icon-container {
+            background-color: var(--primary-glow);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .game-card:hover .icon-container {
+            background-color: var(--secondary-glow);
+            transform: rotate(15deg);
+        }
+
+        /* Estilos para el Modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .modal-backdrop.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal-backdrop.visible .modal-content {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="theme-guacatela">
+
+    <!-- Vista del Menú Principal -->
+    <div id="main-menu" class="main-container min-h-screen w-full flex flex-col items-center justify-center p-4">
+        <header class="w-full max-w-4xl text-center mb-8">
+            <h1 id="main-title" class="text-5xl sm:text-7xl font-black mb-4 transition-all duration-300" style="font-family: var(--font-title); color: var(--text-color);">
+                El Mundo de los Guácatela
+            </h1>
+            <div class="flex justify-center items-center gap-2">
+                <label for="theme-select" class="text-lg font-bold" style="color: var(--text-color);">Elige un tema:</label>
+                <select id="theme-select" class="bg-white/20 border-2 rounded-full shadow-lg py-2 px-4 font-bold transition-all duration-300 focus:outline-none focus:ring-4" style="border-color: var(--primary-glow); color: var(--text-color); ring-color: var(--primary-glow);">
+                    <option value="guacatela" selected style="background: #2c1338; color: white;">Tema Guácatela</option>
+                    <option value="toxina" style="background: #14532d; color: #ecfccb;">Tema Toxina</option>
+                    <option value="ronoso" style="background: #422006; color: #fef3c7;">Tema Roñoso</option>
+                </select>
+            </div>
+        </header>
+
+        <main class="w-full max-w-6xl">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                
+                <div id="open-scene-modal-btn" class="game-card flex flex-col items-center justify-center p-6 rounded-2xl shadow-lg cursor-pointer">
+                    <div class="icon-container h-24 w-24 mb-4 flex items-center justify-center rounded-full text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
+                    </div>
+                    <span class="font-bold text-lg text-center" style="font-family: var(--font-header);">Ordenar Escenas</span>
+                </div>
+                
+                <div id="open-chapter-modal-btn" class="game-card flex flex-col items-center justify-center p-6 rounded-2xl shadow-lg cursor-pointer">
+                    <div class="icon-container h-24 w-24 mb-4 flex items-center justify-center rounded-full text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19V5a2 2 0 012-2h10a2 2 0 012 2v14l-5-2.5L5 19z" /></svg>
+                    </div>
+                    <span class="font-bold text-lg text-center" style="font-family: var(--font-header);">Ordenar Capítulos</span>
+                </div>
+
+                <div id="game-launcher-memorice" class="game-card flex flex-col items-center justify-center p-6 rounded-2xl shadow-lg cursor-pointer">
+                    <div class="icon-container h-24 w-24 mb-4 flex items-center justify-center rounded-full text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21v-4a6 6 0 00-12 0v4" /></svg>
+                    </div>
+                    <span class="font-bold text-lg" style="font-family: var(--font-header);">Memorice</span>
+                </div>
+                
+                <div id="game-launcher-unir" class="game-card flex flex-col items-center justify-center p-6 rounded-2xl shadow-lg cursor-pointer">
+                    <div class="icon-container h-24 w-24 mb-4 flex items-center justify-center rounded-full text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                    </div>
+                    <span class="font-bold text-lg" style="font-family: var(--font-header);">Unir Imágenes</span>
+                </div>
+
+                <div id="game-launcher-audio" class="game-card flex flex-col items-center justify-center p-6 rounded-2xl shadow-lg cursor-pointer">
+                    <div class="icon-container h-24 w-24 mb-4 flex items-center justify-center rounded-full text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.858 15.858a5 5 0 010-7.072m2.829 9.9a9 9 0 010-12.728M12 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    </div>
+                    <span class="font-bold text-lg" style="font-family: var(--font-header);">Audio Cuento</span>
+                </div>
+                
+                <div id="open-quiz-modal-btn" class="game-card flex flex-col items-center justify-center p-6 rounded-2xl shadow-lg cursor-pointer">
+                    <div class="icon-container h-24 w-24 mb-4 flex items-center justify-center rounded-full text-white">
+                       <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </div>
+                    <span class="font-bold text-lg" style="font-family: var(--font-header);">Quiz Contrarreloj</span>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para seleccionar nivel de Ordenar Escenas -->
+    <div id="scene-select-modal" class="modal-backdrop">
+        <div class="modal-content w-full max-w-md p-6 rounded-3xl text-center">
+            <h2 class="text-3xl mb-6" style="font-family: var(--font-header); color: var(--text-color);">Elige Dificultad</h2>
+            <div class="space-y-4">
+                <button data-level="facil" class="action-button w-full" style="background: var(--primary-glow);">Fácil (3 Escenas)</button>
+                <button data-level="intermedio" class="action-button w-full" style="background: var(--primary-glow);">Intermedio (5 Escenas)</button>
+                <button data-level="dificil" class="action-button w-full" style="background: var(--primary-glow);">Difícil (7 Escenas)</button>
+            </div>
+            <button id="close-scene-modal-btn" class="mt-8 font-bold" style="color: var(--text-color);">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal para seleccionar nivel de Ordenar Capítulos -->
+    <div id="chapter-select-modal" class="modal-backdrop">
+        <div class="modal-content w-full max-w-md p-6 rounded-3xl text-center">
+            <h2 class="text-3xl mb-6" style="font-family: var(--font-header); color: var(--text-color);">Elige un Nivel</h2>
+            <div class="space-y-4">
+                <button data-level="1-5" class="action-button w-full" style="background: var(--primary-glow);">Capítulos 1 al 5</button>
+                <button data-level="6-10" class="action-button w-full" style="background: var(--primary-glow);">Capítulos 6 al 10</button>
+                <button data-level="11-15" class="action-button w-full" style="background: var(--primary-glow);">Capítulos 11 al 15</button>
+                <button data-level="todos" class="action-button w-full" style="background: var(--secondary-glow);">¡Todos los Capítulos!</button>
+            </div>
+            <button id="close-chapter-modal-btn" class="mt-8 font-bold" style="color: var(--text-color);">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal para seleccionar nivel de Quiz -->
+    <div id="quiz-select-modal" class="modal-backdrop">
+        <div class="modal-content w-full max-w-md p-6 rounded-3xl text-center">
+            <h2 class="text-3xl mb-6" style="font-family: var(--font-header); color: var(--text-color);">Elige la Dificultad del Quiz</h2>
+            <div class="space-y-4">
+                <button data-level="facil" class="action-button w-full" style="background: var(--primary-glow);">Fácil (10s)</button>
+                <button data-level="intermedio" class="action-button w-full" style="background: var(--primary-glow);">Intermedio (7s)</button>
+                <button data-level="dificil" class="action-button w-full" style="background: var(--primary-glow);">Difícil (5s)</button>
+            </div>
+            <button id="close-quiz-modal-btn" class="mt-8 font-bold" style="color: var(--text-color);">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Vista del Juego (inicialmente vacía y oculta) -->
+    <div id="game-view" class="main-container hidden min-h-screen w-full flex items-center justify-center p-4">
+        <!-- El contenido de los juegos se inyectará aquí con JavaScript -->
+    </div>
+
+    <script>
+        // --- LÓGICA PRINCIPAL DE NAVEGACIÓN Y TEMAS ---
+        const mainMenu = document.getElementById('main-menu');
+        const gameView = document.getElementById('game-view');
+        const themeSelect = document.getElementById('theme-select');
+        const mainTitle = document.getElementById('main-title');
+        const body = document.body;
+        
+        const sceneModal = document.getElementById('scene-select-modal');
+        const openSceneModalBtn = document.getElementById('open-scene-modal-btn');
+        const closeSceneModalBtn = document.getElementById('close-scene-modal-btn');
+
+        const chapterModal = document.getElementById('chapter-select-modal');
+        const openChapterModalBtn = document.getElementById('open-chapter-modal-btn');
+        const closeChapterModalBtn = document.getElementById('close-chapter-modal-btn');
+
+        const quizModal = document.getElementById('quiz-select-modal');
+        const openQuizModalBtn = document.getElementById('open-quiz-modal-btn');
+        const closeQuizModalBtn = document.getElementById('close-quiz-modal-btn');
+
+        const themeData = {
+            guacatela: { name: 'de los Guácatela', className: 'theme-guacatela' },
+            toxina: { name: 'de Toxina', className: 'theme-toxina' },
+            ronoso: { name: 'de Roñoso', className: 'theme-ronoso' }
+        };
+
+        function showView(viewId) {
+            if (viewId === 'game') {
+                mainMenu.classList.add('hidden');
+                gameView.classList.remove('hidden');
+            } else {
+                gameView.classList.add('hidden');
+                mainMenu.classList.remove('hidden');
+                gameView.innerHTML = ''; // Limpiar el juego al volver al menú
+            }
+        }
+
+        function applyTheme(themeKey) {
+            const theme = themeData[themeKey];
+            if (!theme) return;
+            mainTitle.textContent = 'El Mundo ' + theme.name;
+            body.className = '';
+            body.classList.add(theme.className);
+        }
+        
+        // --- Lógica de Modales ---
+        openSceneModalBtn.addEventListener('click', () => sceneModal.classList.add('visible'));
+        closeSceneModalBtn.addEventListener('click', () => sceneModal.classList.remove('visible'));
+        sceneModal.addEventListener('click', (e) => { if (e.target === sceneModal) sceneModal.classList.remove('visible'); });
+        document.querySelectorAll('#scene-select-modal .action-button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const level = btn.dataset.level;
+                loadGame(gameOrdenaHistoria, level);
+                sceneModal.classList.remove('visible');
+            });
+        });
+
+        openChapterModalBtn.addEventListener('click', () => chapterModal.classList.add('visible'));
+        closeChapterModalBtn.addEventListener('click', () => chapterModal.classList.remove('visible'));
+        chapterModal.addEventListener('click', (e) => { if (e.target === chapterModal) chapterModal.classList.remove('visible'); });
+        document.querySelectorAll('#chapter-select-modal .action-button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const level = btn.dataset.level;
+                loadGame(gameOrdenaCapitulos, level);
+                chapterModal.classList.remove('visible');
+            });
+        });
+
+        openQuizModalBtn.addEventListener('click', () => quizModal.classList.add('visible'));
+        closeQuizModalBtn.addEventListener('click', () => quizModal.classList.remove('visible'));
+        quizModal.addEventListener('click', (e) => { if (e.target === quizModal) quizModal.classList.remove('visible'); });
+        document.querySelectorAll('#quiz-select-modal .action-button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const level = btn.dataset.level;
+                loadGame(gameQuiz, level);
+                quizModal.classList.remove('visible');
+            });
+        });
+
+        themeSelect.addEventListener('change', (e) => applyTheme(e.target.value));
+        window.addEventListener('DOMContentLoaded', () => applyTheme(themeSelect.value));
+
+        // --- DEFINICIÓN DE LOS JUEGOS (HTML Y JS) ---
+
+        const commonStyles = `
+            .game-container { background: var(--card-bg); border: 1px solid var(--card-border); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); }
+            @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px) rotate(-2deg); } 75% { transform: translateX(5px) rotate(2deg); } }
+            .celebration-element { position: absolute; bottom: -100px; animation: float-up 6s linear infinite; font-size: 40px; opacity: 0.7; }
+            @keyframes float-up { to { transform: translateY(-120vh) rotate(720deg); opacity: 0; } }
+            .action-button { font-family: var(--font-header); border-radius: 50px; padding: 1rem 2.5rem; font-size: 1.25rem; color: white; border: 2px solid rgba(255,255,255,0.8); text-shadow: 0 2px 4px rgba(0,0,0,0.3); transition: all 0.3s ease; position: relative; overflow: hidden; }
+            .action-button:before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%); transform: scale(0); transition: transform 0.5s ease; }
+            .action-button:hover:before { transform: scale(2); }
+            .action-button:hover { transform: scale(1.1) translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+            .back-button { position: absolute; top: 20px; left: 20px; background: var(--accent-glow); color: white; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s ease; z-index: 10; }
+            .back-button:hover { transform: scale(1.1) rotate(-15deg); }
+        `;
+
+        // Juego 1: Ordenar la Historia (con niveles)
+        const gameOrdenaHistoria = {
+            html: `
+                <style>
+                    ${commonStyles}
+                    .dragging { opacity: 0.6; transform: scale(1.05) rotate(3deg); box-shadow: 0 0 30px var(--primary-glow); cursor: grabbing; }
+                    .drop-zone { background: rgba(0,0,0,0.2); border: 2px dashed var(--text-color); opacity: 0.5; transition: all 0.3s ease; position: relative; }
+                    .drop-zone .number { font-family: var(--font-header); color: var(--text-color); font-size: 3rem; md:font-size: 5rem; transition: all 0.3s ease; opacity: 0.5; }
+                    .drop-zone.drag-over { background: rgba(34, 197, 94, 0.2); border-style: solid; border-color: var(--secondary-glow); transform: scale(1.05); opacity: 1; }
+                    .drop-zone.drag-over .number { opacity: 0.8; transform: scale(1.2); }
+                    .drop-zone.correct { border-color: var(--secondary-glow); box-shadow: 0 0 15px var(--secondary-glow); opacity: 1; }
+                    .drop-zone.incorrect { border-color: #ef4444; box-shadow: 0 0 15px #ef4444; animation: shake 0.5s; opacity: 1; }
+                    #check-button { background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow)); }
+                    #reset-button { background: linear-gradient(45deg, var(--accent-glow), #fbbf24); }
+                </style>
+                <div id="celebration-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+                <main class="game-container w-full max-w-6xl mx-auto p-6 md:p-8 rounded-3xl relative">
+                    <button id="back-to-menu" class="back-button" title="Volver al Menú">&#x21A9;</button>
+                    <header class="text-center mb-6">
+                        <h1 class="text-5xl md:text-7xl" style="font-family: var(--font-title); color: var(--text-color);">Ordenar Escenas</h1>
+                        <h2 id="level-title" class="text-2xl md:text-3xl mt-2" style="font-family: var(--font-header); color: var(--secondary-glow);"></h2>
+                    </header>
+                    <div id="feedback-message" class="text-center font-bold text-lg mb-6 p-4 rounded-full transition-all duration-500" style="background: rgba(0,0,0,0.2); color: var(--text-color);">✨ Arrastra cada escena a su lugar correcto ✨</div>
+                    <div id="timeline-container" class="grid gap-4 mb-8 min-h-[150px]"></div>
+                    <div id="cards-container" class="bg-black/20 p-4 rounded-2xl min-h-[180px] flex flex-wrap items-center justify-center gap-4 border border-white/10"></div>
+                    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <button id="check-button" class="action-button">Revisar</button>
+                        <button id="reset-button" class="action-button hidden">Jugar de Nuevo</button>
+                    </div>
+                </main>
+            `,
+            script: `
+            (function() {
+                const allScenes = [
+                    { id: 1, desc: "Toxi y Roño, el inicio." }, { id: 2, desc: "Abrazo fuerte con eructo." },
+                    { id: 3, desc: "Se electrocuta con el poste de luz." }, { id: 4, desc: "Adoptando salchichas." },
+                    { id: 5, desc: "Lucy, la niña muy, muy enferma." }, { id: 6, desc: "Las salchichas en el refri cobran vida." },
+                    { id: 7, desc: "Adoptan a las salchichas como guardianas." }, { id: 8, desc: "Roñoso inventa el email de Lucy." },
+                    { id: 9, desc: "Toxina se lava el pelo con cloro y queda verde." }, { id: 10, desc: "La Mascota llega al pelo de Roñoso." },
+                    { id: 11, desc: "Los vecinos Cardinales se quejan del mal olor." }, { id: 12, desc: "Usan un gas para espantar a los Cardinales." },
+                    { id: 13, desc: "Bacilo el científico les envía correos falsos." }, { id: 14, desc: "Toxina pierde los dientes por el cloro." },
+                    { id: 15, desc: "Roñoso le pone dientes de vampiro." }, { id: 16, desc: "Toxina envasa sus gases para venderlos." },
+                    { id: 17, desc: "La casa explota y queda de un piso." }, { id: 18, desc: "Lucy (Bacilo) anuncia que los visitará." },
+                    { id: 19, desc: "Los Guácatela se limpian para recibir a Lucy." }, { id: 20, desc: "Bacilo revela su plan y lo adoptan." }
+                ];
+
+                const levelSettings = {
+                    facil: { count: 3, name: "Nivel Fácil", grid: "grid-cols-3" },
+                    intermedio: { count: 5, name: "Nivel Intermedio", grid: "grid-cols-2 md:grid-cols-5" },
+                    dificil: { count: 7, name: "Nivel Difícil", grid: "grid-cols-3 md:grid-cols-7" }
+                };
+
+                let currentLevel = 'facil';
+                
+                const timeline = document.getElementById('timeline-container');
+                const cardsContainer = document.getElementById('cards-container');
+                const checkBtn = document.getElementById('check-button');
+                const resetBtn = document.getElementById('reset-button');
+                const feedback = document.getElementById('feedback-message');
+                const celebration = document.getElementById('celebration-container');
+                const levelTitle = document.getElementById('level-title');
+                document.getElementById('back-to-menu').addEventListener('click', () => showView('menu'));
+                let draggedCard = null;
+
+                function initOrdenarHistoria(level) {
+                    currentLevel = level;
+                    const settings = levelSettings[level];
+                    levelTitle.textContent = settings.name;
+                    timeline.className = 'grid gap-2 md:gap-4 mb-8 min-h-[150px] ' + settings.grid;
+
+                    if (celebration) celebration.innerHTML = '';
+                    
+                    const gameScenes = shuffleArray([...allScenes]).slice(0, settings.count);
+                    const correctOrderIds = [...gameScenes].sort((a, b) => a.id - b.id).map(scene => scene.id);
+                    
+                    timeline.innerHTML = '';
+                    correctOrderIds.forEach((id, index) => {
+                        const zone = document.createElement('div');
+                        zone.className = 'drop-zone h-40 md:h-48 rounded-xl flex items-center justify-center';
+                        zone.dataset.id = id;
+                        zone.innerHTML = '<span class="number">' + (index + 1) + '</span>';
+                        timeline.appendChild(zone);
+                    });
+
+                    cardsContainer.innerHTML = '';
+                    shuffleArray(gameScenes).forEach(scene => {
+                        const card = document.createElement('div');
+                        card.id = 'card-' + scene.id;
+                        card.dataset.id = scene.id;
+                        card.className = 'scene-card w-32 md:w-40 cursor-grab bg-white/90 p-2 rounded-xl shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl';
+                        card.draggable = true;
+                        card.innerHTML = 
+                            '<div class="relative">' +
+                                '<img src="https://placehold.co/300x200/a855f7/ffffff?text=Escena+' + scene.id + '" alt="' + scene.desc + '" class="w-full h-20 md:h-24 object-cover rounded-md pointer-events-none">' +
+                            '</div>' +
+                            '<p class="mt-2 text-center text-xs font-semibold text-gray-700 pointer-events-none">' + scene.desc + '</p>';
+                        cardsContainer.appendChild(card);
+                    });
+                    
+                    resetUI();
+                    addEventListeners();
+                }
+                function resetUI() {
+                    checkBtn.classList.remove('hidden');
+                    resetBtn.classList.add('hidden');
+                    feedback.textContent = '✨ Arrastra cada escena a su lugar correcto ✨';
+                    feedback.style.backgroundColor = 'rgba(0,0,0,0.2)';
+                    document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('correct', 'incorrect'));
+                }
+                function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; }
+                function addEventListeners() {
+                    document.querySelectorAll('.scene-card').forEach(c => {
+                        c.addEventListener('dragstart', e => { draggedCard = e.target; e.dataTransfer.setData('text/plain', draggedCard.id); setTimeout(() => e.target.classList.add('dragging'), 0); });
+                        c.addEventListener('dragend', e => e.target.classList.remove('dragging'));
+                    });
+                    document.querySelectorAll('.drop-zone').forEach(z => {
+                        z.addEventListener('dragover', e => e.preventDefault());
+                        z.addEventListener('dragenter', e => { e.preventDefault(); if (e.target.closest('.drop-zone')) e.target.closest('.drop-zone').classList.add('drag-over'); });
+                        z.addEventListener('dragleave', e => { if (e.target.closest('.drop-zone')) e.target.closest('.drop-zone').classList.remove('drag-over'); });
+                        z.addEventListener('drop', e => {
+                            e.preventDefault();
+                            const targetZone = e.target.closest('.drop-zone');
+                            if (targetZone && !targetZone.querySelector('.scene-card')) { targetZone.innerHTML = ''; targetZone.appendChild(draggedCard); }
+                            targetZone.classList.remove('drag-over');
+                        });
+                    });
+                }
+                checkBtn.addEventListener('click', () => {
+                    let placedCards = timeline.querySelectorAll('.scene-card').length;
+                    if (placedCards < levelSettings[currentLevel].count) { feedback.textContent = '¡Oh, oh! Aún te faltan escenas por ordenar.'; feedback.style.backgroundColor = 'rgba(239, 68, 68, 0.5)'; return; }
+                    
+                    let isCorrect = true;
+                    timeline.querySelectorAll('.drop-zone').forEach(zone => {
+                        const card = zone.querySelector('.scene-card');
+                        zone.classList.remove('incorrect', 'correct');
+                        if (!card || card.dataset.id !== zone.dataset.id) { isCorrect = false; zone.classList.add('incorrect'); } else { zone.classList.add('correct'); }
+                    });
+
+                    if (isCorrect) {
+                        feedback.textContent = '¡Felicidades! ¡Ordenaste la historia perfectamente!';
+                        feedback.style.backgroundColor = 'rgba(34, 197, 94, 0.5)';
+                        checkBtn.classList.add('hidden');
+                        resetBtn.classList.remove('hidden');
+                        launchCelebration();
+                    } else {
+                        feedback.textContent = '¡Casi! Alguna escena no está en su lugar.';
+                        feedback.style.backgroundColor = 'rgba(245, 158, 11, 0.5)';
+                    }
+                });
+                resetBtn.addEventListener('click', () => initOrdenarHistoria(currentLevel));
+                function launchCelebration() {
+                    const items = ['📚', '✨', '✔️', '💚', '⭐', '💜'];
+                    for (let i = 0; i < 40; i++) {
+                        const el = document.createElement('div');
+                        el.className = 'celebration-element';
+                        el.textContent = items[Math.floor(Math.random() * items.length)];
+                        el.style.left = (Math.random() * 100) + 'vw';
+                        el.style.animationDelay = (Math.random() * 6) + 's';
+                        el.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                        celebration.appendChild(el);
+                    }
+                }
+                window.startOrdenarHistoria = initOrdenarHistoria;
+            })();
+            `
+        };
+        
+        // Juego 1.5: Ordenar Capítulos
+        const gameOrdenaCapitulos = {
+            html: `
+                <style>
+                    ${commonStyles}
+                    .dragging { opacity: 0.6; transform: scale(1.05) rotate(2deg); box-shadow: 0 0 30px var(--primary-glow); cursor: grabbing; }
+                    .timeline-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; max-height: 50vh; overflow-y: auto; padding: 1rem; }
+                    .drop-zone-chapter { background: rgba(0,0,0,0.2); border: 2px dashed var(--text-color); opacity: 0.7; transition: all 0.3s ease; border-radius: 1rem; padding: 0.5rem; display: flex; align-items: center; gap: 1rem; min-height: 60px; }
+                    .drop-zone-chapter .number { font-family: var(--font-header); color: var(--text-color); font-size: 1.5rem; opacity: 0.5; }
+                    .drop-zone-chapter.drag-over { background: rgba(34, 197, 94, 0.2); border-style: solid; border-color: var(--secondary-glow); transform: scale(1.02); opacity: 1; }
+                    .drop-zone-chapter.correct { border-color: var(--secondary-glow); }
+                    .drop-zone-chapter.incorrect { border-color: #ef4444; animation: shake 0.5s; }
+                    .chapter-card { background: var(--card-bg); border: 2px solid var(--card-border); color: var(--text-color); padding: 0.75rem; border-radius: 1rem; cursor: grab; text-align: center; font-weight: bold; }
+                    #chapters-container { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+                </style>
+                <div id="celebration-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+                <main class="game-container w-full max-w-6xl mx-auto p-6 md:p-8 rounded-3xl relative">
+                    <button id="back-to-menu" class="back-button" title="Volver al Menú">&#x21A9;</button>
+                    <header class="text-center mb-4">
+                        <h1 class="text-5xl md:text-7xl" style="font-family: var(--font-title); color: var(--text-color);">Ordenar Capítulos</h1>
+                        <h2 id="level-title-chapters" class="text-2xl md:text-3xl mt-2" style="font-family: var(--font-header); color: var(--secondary-glow);"></h2>
+                    </header>
+                    <div id="feedback-message" class="text-center font-bold text-lg mb-4 p-4 rounded-full transition-all duration-500" style="background: rgba(0,0,0,0.2); color: var(--text-color);">Arrastra cada capítulo a su número correcto</div>
+                    <div id="timeline-grid" class="timeline-grid bg-black/10 rounded-xl"></div>
+                    <div id="chapters-container" class="bg-black/20 p-4 mt-4 rounded-2xl min-h-[150px] border border-white/10"></div>
+                    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <button id="check-button" class="action-button">Revisar</button>
+                        <button id="reset-button" class="action-button hidden">Jugar de Nuevo</button>
+                    </div>
+                </main>
+            `,
+            script: `
+            (function() {
+                const allChapters = [
+                    "Aquí vienen Toxi y Roño", "Una experiencia electrizante", "Salchichas domesticadas",
+                    "El plan secreto de Roñoso", "La Mascota: una bestia al acecho", "¡Váyanse, hediondos!",
+                    "¿Quién quiere conocer a los Guacatela?", "Poder explosivo", "Ya parece cuento",
+                    "El colmo de los colmillos", "Llega otro correo sospechoso", "Toxi y su olfato para los negocios",
+                    "No pueden creer lo que sus ojos ven", "Sorprendidos por la ciencia-ficción", "¿Y qué pasó al final?"
+                ];
+                
+                const levelSettings = {
+                    '1-5': { start: 0, end: 5, name: "Capítulos 1 al 5" },
+                    '6-10': { start: 5, end: 10, name: "Capítulos 6 al 10" },
+                    '11-15': { start: 10, end: 15, name: "Capítulos 11 al 15" },
+                    'todos': { start: 0, end: 15, name: "Todos los Capítulos" }
+                };
+
+                let currentLevel = '1-5';
+                let gameChapters = [];
+                
+                const timelineGrid = document.getElementById('timeline-grid');
+                const chaptersContainer = document.getElementById('chapters-container');
+                const checkBtn = document.getElementById('check-button');
+                const resetBtn = document.getElementById('reset-button');
+                const feedback = document.getElementById('feedback-message');
+                const celebration = document.getElementById('celebration-container');
+                const levelTitle = document.getElementById('level-title-chapters');
+                document.getElementById('back-to-menu').addEventListener('click', () => showView('menu'));
+                let draggedChapter = null;
+
+                function initOrdenarCapitulos(level) {
+                    currentLevel = level;
+                    const settings = levelSettings[level];
+                    levelTitle.textContent = settings.name;
+                    gameChapters = allChapters.slice(settings.start, settings.end);
+
+                    if (celebration) celebration.innerHTML = '';
+                    timelineGrid.innerHTML = '';
+                    gameChapters.forEach((_, index) => {
+                        const zone = document.createElement('div');
+                        zone.className = 'drop-zone-chapter';
+                        zone.dataset.index = index;
+                        zone.innerHTML = '<span class="number">' + (settings.start + index + 1) + '</span>';
+                        timelineGrid.appendChild(zone);
+                    });
+
+                    chaptersContainer.innerHTML = '';
+                    shuffleArray([...gameChapters]).forEach(title => {
+                        const card = document.createElement('div');
+                        card.className = 'chapter-card';
+                        card.textContent = title;
+                        card.draggable = true;
+                        chaptersContainer.appendChild(card);
+                    });
+                    
+                    resetUI();
+                    addEventListeners();
+                }
+                function resetUI() {
+                    checkBtn.classList.remove('hidden');
+                    resetBtn.classList.add('hidden');
+                    feedback.textContent = 'Arrastra cada capítulo a su número correcto';
+                    feedback.style.backgroundColor = 'rgba(0,0,0,0.2)';
+                    document.querySelectorAll('.drop-zone-chapter').forEach(z => z.classList.remove('correct', 'incorrect'));
+                }
+                function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; }
+                function addEventListeners() {
+                    document.querySelectorAll('.chapter-card').forEach(c => {
+                        c.addEventListener('dragstart', e => { draggedChapter = e.target; setTimeout(() => e.target.classList.add('dragging'), 0); });
+                        c.addEventListener('dragend', e => e.target.classList.remove('dragging'));
+                    });
+                    document.querySelectorAll('.drop-zone-chapter').forEach(z => {
+                        z.addEventListener('dragover', e => e.preventDefault());
+                        z.addEventListener('dragenter', e => { e.preventDefault(); if (e.target.closest('.drop-zone-chapter')) e.target.closest('.drop-zone-chapter').classList.add('drag-over'); });
+                        z.addEventListener('dragleave', e => { if (e.target.closest('.drop-zone-chapter')) e.target.closest('.drop-zone-chapter').classList.remove('drag-over'); });
+                        z.addEventListener('drop', e => {
+                            e.preventDefault();
+                            const targetZone = e.target.closest('.drop-zone-chapter');
+                            targetZone.classList.remove('drag-over');
+                            if (targetZone && !targetZone.querySelector('.chapter-card')) {
+                                targetZone.appendChild(draggedChapter);
+                            }
+                        });
+                    });
+                }
+                checkBtn.addEventListener('click', () => {
+                    let placedCards = timelineGrid.querySelectorAll('.chapter-card').length;
+                    if (placedCards < gameChapters.length) { feedback.textContent = '¡Oh, oh! Aún te faltan capítulos por ordenar.'; feedback.style.backgroundColor = 'rgba(239, 68, 68, 0.5)'; return; }
+                    
+                    let allCorrect = true;
+                    timelineGrid.querySelectorAll('.drop-zone-chapter').forEach((zone, index) => {
+                        const card = zone.querySelector('.chapter-card');
+                        zone.classList.remove('incorrect', 'correct');
+                        if (!card || card.textContent !== gameChapters[index]) {
+                            allCorrect = false;
+                            zone.classList.add('incorrect');
+                        } else {
+                            zone.classList.add('correct');
+                        }
+                    });
+
+                    if (allCorrect) {
+                        feedback.textContent = '¡Genial! ¡Conoces la historia a la perfección!';
+                        feedback.style.backgroundColor = 'rgba(34, 197, 94, 0.5)';
+                        checkBtn.classList.add('hidden');
+                        resetBtn.classList.remove('hidden');
+                        launchCelebration();
+                    } else {
+                        feedback.textContent = '¡Algunos capítulos no están en su lugar! Inténtalo de nuevo.';
+                        feedback.style.backgroundColor = 'rgba(245, 158, 11, 0.5)';
+                    }
+                });
+                resetBtn.addEventListener('click', () => initOrdenarCapitulos(currentLevel));
+                function launchCelebration() {
+                    const items = ['📖', '✨', '🏆', '💚', '⭐', '💜'];
+                    for (let i = 0; i < 40; i++) {
+                        const el = document.createElement('div');
+                        el.className = 'celebration-element';
+                        el.textContent = items[Math.floor(Math.random() * items.length)];
+                        el.style.left = (Math.random() * 100) + 'vw';
+                        el.style.animationDelay = (Math.random() * 6) + 's';
+                        el.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                        celebration.appendChild(el);
+                    }
+                }
+                window.startOrdenarCapitulos = initOrdenarCapitulos;
+            })();
+            `
+        };
+
+        // Juego 2: Memorice
+        const gameMemorice = {
+            html: `
+                <style>
+                    ${commonStyles}
+                    .memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; perspective: 1000px; }
+                    .memory-card { width: 100px; height: 140px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; cursor: pointer; }
+                    .memory-card.is-flipped { transform: rotateY(180deg); }
+                    .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+                    .card-front { background: var(--card-bg); border: 1px solid var(--card-border); transform: rotateY(180deg); }
+                    .card-back { background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow)); font-size: 3rem; }
+                    .memory-card.is-matched { opacity: 0.7; transform: rotateY(180deg) scale(0.95); cursor: default; }
+                </style>
+                <div id="celebration-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+                <main class="game-container w-full max-w-xl mx-auto p-6 md:p-8 rounded-3xl relative">
+                    <button id="back-to-menu" class="back-button" title="Volver al Menú">&#x21A9;</button>
+                    <header class="text-center mb-4">
+                        <h1 class="text-5xl" style="font-family: var(--font-title); color: var(--text-color);">Memorice Mágico</h1>
+                        <p class="text-lg mt-2" style="color: var(--text-color);">Movimientos: <span id="moves-counter" class="font-bold">0</span></p>
+                    </header>
+                    <div id="memory-grid" class="memory-grid mx-auto"></div>
+                </main>
+            `,
+            script: `
+            (function() {
+                const cardData = [
+                    { name: 'Toxina', emoji: '👩‍🎤' }, { name: 'Roñoso', emoji: '🧔' },
+                    { name: 'Mascota', emoji: '🐢' }, { name: 'Salchicha', emoji: '🌭' },
+                    { name: 'Cloro', emoji: '🧪' }, { name: 'Cinturón', emoji: '⚡️' }
+                ];
+                const gameGrid = document.getElementById('memory-grid');
+                const movesCounter = document.getElementById('moves-counter');
+                const celebration = document.getElementById('celebration-container');
+                document.getElementById('back-to-menu').addEventListener('click', () => showView('menu'));
+                
+                let cards = [...cardData, ...cardData];
+                let flippedCards = [];
+                let matchedPairs = 0;
+                let moves = 0;
+                let lockBoard = false;
+
+                function initMemorice() {
+                    shuffleArray(cards);
+                    gameGrid.innerHTML = '';
+                    if(celebration) celebration.innerHTML = '';
+                    moves = 0;
+                    matchedPairs = 0;
+                    movesCounter.textContent = '0';
+
+                    cards.forEach(item => {
+                        const cardElement = document.createElement('div');
+                        cardElement.classList.add('memory-card');
+                        cardElement.dataset.name = item.name;
+                        cardElement.innerHTML = 
+                            '<div class="card-face card-front"><span class="text-5xl">' + item.emoji + '</span></div>' +
+                            '<div class="card-face card-back">?</div>';
+                        gameGrid.appendChild(cardElement);
+                        cardElement.addEventListener('click', flipCard);
+                    });
+                }
+
+                function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } }
+
+                function flipCard() {
+                    if (lockBoard || this === flippedCards[0] || this.classList.contains('is-flipped')) return;
+                    this.classList.add('is-flipped');
+                    flippedCards.push(this);
+                    if (flippedCards.length === 2) {
+                        moves++;
+                        movesCounter.textContent = moves;
+                        lockBoard = true;
+                        setTimeout(checkForMatch, 700);
+                    }
+                }
+
+                function checkForMatch() {
+                    const [card1, card2] = flippedCards;
+                    if (card1.dataset.name === card2.dataset.name) {
+                        disableCards();
+                    } else {
+                        unflipCards();
+                    }
+                }
+
+                function disableCards() {
+                    flippedCards.forEach(card => {
+                        card.removeEventListener('click', flipCard);
+                        card.classList.add('is-matched');
+                    });
+                    matchedPairs++;
+                    resetBoard();
+                    if (matchedPairs === cardData.length) {
+                        setTimeout(launchMemoriceCelebration, 500);
+                    }
+                }
+
+                function unflipCards() {
+                    setTimeout(() => {
+                        flippedCards.forEach(card => card.classList.remove('is-flipped'));
+                        resetBoard();
+                    }, 1200);
+                }
+
+                function resetBoard() {
+                    [flippedCards, lockBoard] = [[], false];
+                }
+                
+                function launchMemoriceCelebration() {
+                    const items = ['🎉', '✨', '👍', '💚', '⭐', '💜'];
+                    for (let i = 0; i < 40; i++) {
+                        const el = document.createElement('div');
+                        el.className = 'celebration-element';
+                        el.textContent = items[Math.floor(Math.random() * items.length)];
+                        el.style.left = (Math.random() * 100) + 'vw';
+                        el.style.animationDelay = (Math.random() * 6) + 's';
+                        el.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                        celebration.appendChild(el);
+                    }
+                }
+
+                initMemorice();
+            })();
+            `
+        };
+
+        // Juego 3: Unir Imágenes
+        const gameUnirImagenes = {
+            html: `
+                <style>
+                    ${commonStyles}
+                    .match-container { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: start; }
+                    .item-column { display: flex; flex-direction: column; gap: 1rem; max-height: 60vh; overflow-y: auto; padding-right: 1rem; }
+                    .match-item, .match-target { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 1rem; padding: 0.75rem; display: flex; align-items: center; gap: 1rem; transition: all 0.3s ease; }
+                    .match-item { cursor: grab; }
+                    .match-item.dragging { opacity: 0.5; transform: scale(1.05); }
+                    .match-target.drag-over { border-color: var(--secondary-glow); box-shadow: 0 0 15px var(--secondary-glow); }
+                    .match-target.matched { background: rgba(34, 197, 94, 0.3); border-color: var(--secondary-glow); }
+                    .item-emoji { font-size: 2rem; }
+                    .item-text { font-family: var(--font-header); font-size: 1.1rem; color: var(--text-color); }
+                    #lines-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+                    #lines-svg line { stroke: var(--secondary-glow); stroke-width: 4; stroke-linecap: round; }
+                </style>
+                <div id="celebration-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+                <main class="game-container w-full max-w-4xl mx-auto p-6 md:p-8 rounded-3xl relative">
+                    <button id="back-to-menu" class="back-button" title="Volver al Menú">&#x21A9;</button>
+                    <header class="text-center mb-6">
+                        <h1 class="text-5xl" style="font-family: var(--font-title); color: var(--text-color);">Unir Parejas</h1>
+                        <p class="text-lg mt-2" style="color: var(--text-color);">Arrastra el personaje a su objeto</p>
+                    </header>
+                    <div class="match-container">
+                        <div id="characters-column" class="item-column"></div>
+                        <div id="svg-container" class="relative h-full"><svg id="lines-svg"></svg></div>
+                        <div id="objects-column" class="item-column"></div>
+                    </div>
+                </main>
+            `,
+            script: `
+            (function() {
+                const matchData = [
+                    { id: 1, character: 'Toxina', object: 'Cinturón Eléctrico', emojiChar: '👩‍🎤', emojiObj: '⚡️' },
+                    { id: 2, character: 'Roñoso', object: 'Correo de Lucy', emojiChar: '🧔', emojiObj: '✉️' },
+                    { id: 3, character: 'La Mascota', object: 'Polilla', emojiChar: '🐢', emojiObj: '🦋' },
+                    { id: 4, character: 'Salchichas', object: 'Plato de comida', emojiChar: '🌭', emojiObj: '🍽️' },
+                    { id: 5, character: 'Bacilo', object: 'Laboratorio', emojiChar: '👨‍🔬', emojiObj: '🔬' },
+                    { id: 6, character: 'Punto Cardinal', object: 'Pinza en la nariz', emojiChar: '👨‍👩‍👧‍👦', emojiObj: '👃' },
+                    { id: 7, character: 'Don Destala', object: 'Dinero', emojiChar: '💰', emojiObj: '💸' },
+                    { id: 8, character: 'Marrullero', object: 'Televisor', emojiChar: '🕺', emojiObj: '📺' },
+                    { id: 9, character: 'Toxi con cloro', object: 'Pelo verde', emojiChar: '🤢', emojiObj: '💇‍♀️' },
+                    { id: 10, character: 'Casa Guácatela', object: 'Basura', emojiChar: '🏠', emojiObj: '🗑️' }
+                ];
+                const charColumn = document.getElementById('characters-column');
+                const objColumn = document.getElementById('objects-column');
+                const svg = document.getElementById('lines-svg');
+                const celebration = document.getElementById('celebration-container');
+                document.getElementById('back-to-menu').addEventListener('click', () => showView('menu'));
+                let draggedItem = null;
+                let matchedCount = 0;
+
+                function initUnirImagenes() {
+                    const shuffledObjects = shuffleArray([...matchData]);
+                    matchData.forEach((item, index) => {
+                        const charDiv = document.createElement('div');
+                        charDiv.className = 'match-item';
+                        charDiv.dataset.id = item.id;
+                        charDiv.id = 'char-' + item.id;
+                        charDiv.draggable = true;
+                        charDiv.innerHTML = '<span class="item-emoji">' + item.emojiChar + '</span><span class="item-text">' + item.character + '</span>';
+                        charColumn.appendChild(charDiv);
+
+                        const objDiv = document.createElement('div');
+                        objDiv.className = 'match-target';
+                        objDiv.dataset.id = shuffledObjects[index].id;
+                        objDiv.id = 'obj-' + shuffledObjects[index].id;
+                        objDiv.innerHTML = '<span class="item-emoji">' + shuffledObjects[index].emojiObj + '</span><span class="item-text">' + shuffledObjects[index].object + '</span>';
+                        objColumn.appendChild(objDiv);
+                    });
+                    addMatchEventListeners();
+                }
+                
+                function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; }
+
+                function addMatchEventListeners() {
+                    document.querySelectorAll('.match-item').forEach(item => {
+                        item.addEventListener('dragstart', e => {
+                            draggedItem = e.target;
+                            setTimeout(() => e.target.classList.add('dragging'), 0);
+                        });
+                        item.addEventListener('dragend', e => {
+                            draggedItem.classList.remove('dragging');
+                        });
+                    });
+                    document.querySelectorAll('.match-target').forEach(target => {
+                        target.addEventListener('dragover', e => e.preventDefault());
+                        target.addEventListener('dragenter', e => e.target.closest('.match-target').classList.add('drag-over'));
+                        target.addEventListener('dragleave', e => e.target.closest('.match-target').classList.remove('drag-over'));
+                        target.addEventListener('drop', e => {
+                            e.preventDefault();
+                            const targetDiv = e.target.closest('.match-target');
+                            targetDiv.classList.remove('drag-over');
+                            if (draggedItem.dataset.id === targetDiv.dataset.id && !targetDiv.classList.contains('matched')) {
+                                targetDiv.classList.add('matched');
+                                draggedItem.draggable = false;
+                                draggedItem.style.opacity = '0.5';
+                                draggedItem.style.cursor = 'default';
+                                drawLine(draggedItem, targetDiv);
+                                matchedCount++;
+                                if (matchedCount === matchData.length) {
+                                    setTimeout(launchUnirCelebration, 500);
+                                }
+                            } else {
+                                draggedItem.classList.add('shake');
+                                setTimeout(() => draggedItem.classList.remove('shake'), 500);
+                            }
+                        });
+                    });
+                }
+
+                function drawLine(startEl, endEl) {
+                    const startRect = startEl.getBoundingClientRect();
+                    const endRect = endEl.getBoundingClientRect();
+                    const svgRect = svg.parentElement.getBoundingClientRect();
+
+                    const x1 = startRect.right - svgRect.left;
+                    const y1 = startRect.top + startRect.height / 2 - svgRect.top;
+                    const x2 = endRect.left - svgRect.left;
+                    const y2 = endRect.top + endRect.height / 2 - svgRect.top;
+
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', x1);
+                    line.setAttribute('y1', y1);
+                    line.setAttribute('x2', x2);
+                    line.setAttribute('y2', y2);
+                    svg.appendChild(line);
+                }
+
+                function launchUnirCelebration() {
+                    const items = ['🔗', '✨', '✔️', '💚', '⭐', '💜'];
+                    for (let i = 0; i < 40; i++) {
+                        const el = document.createElement('div');
+                        el.className = 'celebration-element';
+                        el.textContent = items[Math.floor(Math.random() * items.length)];
+                        el.style.left = (Math.random() * 100) + 'vw';
+                        el.style.animationDelay = (Math.random() * 6) + 's';
+                        el.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                        celebration.appendChild(el);
+                    }
+                }
+
+                initUnirImagenes();
+            })();
+            `
+        };
+
+        // Juego 4: Audio Cuento
+        const gameAudioCuento = {
+            html: `
+                <style>
+                    ${commonStyles}
+                    .audio-player-container { text-align: center; }
+                    #playlist .track-item { background: var(--card-bg); border: 2px solid var(--card-border); color: var(--text-color); padding: 1rem; border-radius: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; }
+                    #playlist .track-item.active { border-color: var(--secondary-glow); box-shadow: 0 0 10px var(--secondary-glow); }
+                    #playlist .track-play-btn { background-color: var(--primary-glow); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+                    .player-controls { margin-top: 2rem; }
+                    #now-playing { font-family: var(--font-header); color: var(--text-color); margin-bottom: 1rem; }
+                    #main-play-pause-btn { background: var(--primary-glow); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 1rem auto; cursor: pointer; transition: all 0.3s ease; }
+                    #main-play-pause-btn:hover { transform: scale(1.1); }
+                    #progress-bar-container { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 5px; cursor: pointer; }
+                    #progress-bar { background: var(--accent-glow); height: 10px; border-radius: 10px; width: 0%; }
+                </style>
+                <main class="game-container w-full max-w-lg mx-auto p-6 md:p-8 rounded-3xl relative">
+                    <button id="back-to-menu" class="back-button" title="Volver al Menú">&#x21A9;</button>
+                    <header class="text-center mb-6">
+                        <h1 class="text-5xl" style="font-family: var(--font-title); color: var(--text-color);">Audio Cuentos</h1>
+                    </header>
+                    <div class="audio-player-container">
+                        <div id="playlist" class="max-h-60 overflow-y-auto pr-2"></div>
+                        <div class="player-controls">
+                            <h3 id="now-playing" class="text-xl">Selecciona un capítulo</h3>
+                            <div id="progress-bar-container">
+                                <div id="progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            `,
+            script: `
+            (function() {
+                const audio = new Audio();
+                const audioTracks = [
+                    { title: "Capítulos 1 - 3", src: "URL_CAPITULOS_1-3_AQUI" },
+                    { title: "Capítulos 4 - 6", src: "URL_CAPITULOS_4-6_AQUI" },
+                    { title: "Capítulos 7 - 9", src: "URL_CAPITULOS_7-9_AQUI" },
+                    { title: "Capítulos 10 - 12", src: "URL_CAPITULOS_10-12_AQUI" },
+                    { title: "Capítulos 13 - 15", src: "URL_CAPITULOS_13-15_AQUI" },
+                    { title: "Resumen Total Podcast", src: "URL_RESUMEN_AQUI" }
+                ];
+                // Reemplaza las URLs de arriba con tus enlaces de GitHub. Por ahora, usaré un audio de ejemplo.
+                audioTracks.forEach(track => {
+                    if (track.src.startsWith("URL_")) {
+                        track.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+                    }
+                });
+
+                const playlistContainer = document.getElementById('playlist');
+                const nowPlayingTitle = document.getElementById('now-playing');
+                const progressBarContainer = document.getElementById('progress-bar-container');
+                const progressBar = document.getElementById('progress-bar');
+                let currentTrackIndex = -1;
+
+                document.getElementById('back-to-menu').addEventListener('click', () => {
+                    audio.pause();
+                    showView('menu');
+                });
+
+                function renderPlaylist() {
+                    playlistContainer.innerHTML = '';
+                    audioTracks.forEach((track, index) => {
+                        const trackItem = document.createElement('div');
+                        trackItem.className = 'track-item';
+                        trackItem.innerHTML = 
+                            '<span class="font-bold">' + track.title + '</span>' +
+                            '<button class="track-play-btn" data-index="' + index + '">' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" viewBox="0 0 20 20" fill="currentColor">' +
+                                    '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />' +
+                                '</svg>' +
+                            '</button>';
+                        playlistContainer.appendChild(trackItem);
+                    });
+
+                    document.querySelectorAll('.track-play-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const index = parseInt(e.currentTarget.dataset.index);
+                            playTrack(index);
+                        });
+                    });
+                }
+
+                function playTrack(index) {
+                    if (currentTrackIndex === index && !audio.paused) {
+                        audio.pause();
+                        return;
+                    }
+                    if (currentTrackIndex !== index) {
+                        currentTrackIndex = index;
+                        audio.src = audioTracks[index].src;
+                        nowPlayingTitle.textContent = 'Reproduciendo: ' + audioTracks[index].title;
+                    }
+                    audio.play();
+                    updateActiveTrack();
+                }
+                
+                function updateActiveTrack() {
+                    document.querySelectorAll('.track-item').forEach((item, index) => {
+                        if (index === currentTrackIndex && !audio.paused) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
+                }
+
+                audio.addEventListener('play', updateActiveTrack);
+                audio.addEventListener('pause', updateActiveTrack);
+                audio.addEventListener('ended', () => {
+                    currentTrackIndex = -1;
+                    nowPlayingTitle.textContent = "Selecciona un capítulo";
+                    updateActiveTrack();
+                });
+
+                audio.addEventListener('timeupdate', () => {
+                    if (audio.duration) {
+                        const progress = (audio.currentTime / audio.duration) * 100;
+                        progressBar.style.width = progress + '%';
+                    }
+                });
+
+                progressBarContainer.addEventListener('click', (e) => {
+                    if (audio.duration) {
+                        const width = progressBarContainer.clientWidth;
+                        const clickX = e.offsetX;
+                        audio.currentTime = (clickX / width) * audio.duration;
+                    }
+                });
+
+                renderPlaylist();
+            })();
+            `
+        };
+
+        // Juego 5: Quiz
+        const gameQuiz = {
+            html: `
+                <style>
+                    ${commonStyles}
+                    .quiz-question { font-family: var(--font-header); font-size: 1.75rem; color: var(--text-color); margin-bottom: 2rem; }
+                    .answer-options { display: grid; grid-template-columns: 1fr; sm:grid-template-columns: 1fr 1fr; gap: 1rem; }
+                    .answer-btn { background: var(--card-bg); border: 2px solid var(--card-border); color: var(--text-color); padding: 1rem; border-radius: 1rem; font-size: 1.1rem; font-weight: bold; transition: all 0.2s ease; }
+                    .answer-btn:hover:not(.disabled) { background-color: var(--primary-glow); color: white; transform: scale(1.05); }
+                    .answer-btn.correct { background-color: #22c55e; color: white; border-color: #16a34a; }
+                    .answer-btn.incorrect { background-color: #ef4444; color: white; border-color: #dc2626; }
+                    .answer-btn.disabled { pointer-events: none; opacity: 0.8; }
+                    #timer-bar-container { background: rgba(0,0,0,0.2); border-radius: 10px; height: 20px; margin-top: 1rem; overflow: hidden; }
+                    #timer-bar { background: linear-gradient(90deg, var(--accent-glow), var(--primary-glow)); height: 100%; width: 100%; transition: width 0.1s linear; }
+                    .quiz-view { text-align: center; }
+                </style>
+                <div id="celebration-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+                <main id="quiz-main" class="game-container w-full max-w-2xl mx-auto p-6 md:p-8 rounded-3xl relative">
+                    <button id="back-to-menu" class="back-button" title="Volver al Menú">&#x21A9;</button>
+                    <header class="text-center mb-6">
+                        <h1 class="text-5xl" style="font-family: var(--font-title); color: var(--text-color);">Quiz Contrarreloj</h1>
+                    </header>
+                    
+                    <div id="quiz-start-view" class="quiz-view">
+                        <h2 id="quiz-difficulty-title" class="text-3xl" style="font-family: var(--font-header); color: var(--text-color);"></h2>
+                        <p class="mt-4 text-lg" style="color: var(--text-color);">Se seleccionarán 10 preguntas al azar. ¡Prepárate!</p>
+                        <button id="start-quiz-btn" class="action-button mt-8" style="background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));">Empezar</button>
+                    </div>
+
+                    <div id="quiz-game-view" class="quiz-view hidden">
+                        <p id="question-counter" class="text-center font-bold" style="color: var(--secondary-glow);"></p>
+                        <p id="quiz-question" class="quiz-question text-center"></p>
+                        <div id="answer-options" class="answer-options"></div>
+                        <div id="timer-bar-container"><div id="timer-bar"></div></div>
+                    </div>
+
+                    <div id="final-score-view" class="quiz-view hidden">
+                        <h2 class="text-4xl" style="font-family: var(--font-header); color: var(--text-color);">¡Juego Terminado!</h2>
+                        <p class="text-2xl mt-4" style="color: var(--text-color);">Tu puntuación:</p>
+                        <p id="final-score" class="text-6xl font-bold my-4" style="color: var(--secondary-glow);"></p>
+                        <button id="play-again-btn" class="action-button" style="background: linear-gradient(45deg, var(--primary-glow), var(--accent-glow));">Volver a Jugar</button>
+                    </div>
+                </main>
+            `,
+            script: `
+            (function() {
+                // BANCO DE PREGUNTAS (Puedes añadir hasta 50 o más aquí)
+                const allQuestions = [
+                    { q: "¿Qué le pasó a Toxina para que su piel quedara magnética?", a: ["Se electrocutó", "Comió imanes", "Se bañó en metal"], correct: 0 },
+                    { q: "¿Cómo se llama la mascota de Roñoso que vive en su pelo?", a: ["Furúnculo", "La Mascota", "Peste"], correct: 1 },
+                    { q: "¿Qué nombre falso usó Roñoso para pedir dinero por email?", a: ["Lucy", "Lola", "Lila"], correct: 0 },
+                    { q: "¿Qué eran en realidad las 'salchichas guardianas'?", a: ["Perros disfrazados", "Gusanos gigantes", "Salchichas que hablaban"], correct: 2 },
+                    { q: "¿Con qué se lavó el pelo Toxina que se lo puso verde?", a: ["Shampoo de palta", "Cloro", "Pintura"], correct: 1 },
+                    { q: "Al final, ¿a quién adoptaron los Guácatela?", a: ["A un perro", "A un gato", "Al científico Bacilo"], correct: 2 },
+                    { q: "¿Cuál es el segundo nombre de Roñoso?", a: ["Sórdido", "Sucio", "Mugriento"], correct: 0 },
+                    { q: "¿Qué aparato de ejercicios compró Toxina por TV?", a: ["Una bicicleta", "Unas pesas", "El cinturón Ab-Dominación"], correct: 2 },
+                    { q: "¿Qué le regalaron a Toxina por su compra por TV?", a: ["Un año de cloro", "Unas zapatillas", "Un set de cuchillos"], correct: 0 },
+                    { q: "La mascota de Roñoso es experta en cazar...", a: ["Ratones", "Polillas", "Arañas"], correct: 1 },
+                    { q: "¿Cómo se llamaba el condominio donde vivían?", a: ["Lo Barato", "Lo Bonito", "Lo Limpio"], correct: 0 },
+                    { q: "¿Qué usaron los Guácatela para espantar a los vecinos Cardinales?", a: ["Gritos y ruidos", "Un gas maloliente", "Agua sucia"], correct: 1 },
+                    { q: "¿Cuál era el apellido de los vecinos limpios?", a: ["Los Pétalos", "Los Soles", "Los Cardinales"], correct: 2 },
+                    { q: "¿Qué le pasó a los dientes de Toxina por usar tanto cloro?", a: ["Se pusieron blancos", "Se disolvieron", "Se afilaron"], correct: 1 },
+                    { q: "El científico Bacilo se disfrazó de todo esto, EXCEPTO:", a: ["Periodista", "Artista", "Bombero"], correct: 2 },
+                    { q: "¿Qué nombre le pusieron al basural que compraron?", a: ["Basural Guácatela", "Conglomerado Basural Segunda Patita", "El Rincón Sucio"], correct: 1 },
+                    { q: "¿Qué le creció a Roñoso por todo el cuerpo al final?", a: ["Más arrugas", "Pelo de oso", "Músculos"], correct: 1 },
+                    { q: "¿Cuál es el nombre de una de las salchichas?", a: ["Peste", "Gripe", "Tos"], correct: 0 },
+                    { q: "El presentador de TV que vendía el cinturón se llamaba:", a: ["Marrullero Camandulero", "Juan Presentador", "Esteban Dido"], correct: 0 },
+                    { q: "¿Qué usó Roñoso para pegarle los dientes de vampiro a Toxina?", a: ["Chicle", "Pegamento N-grudo", "Cinta adhesiva"], correct: 1 }
+                ];
+
+                const difficultySettings = {
+                    facil: { time: 10, name: "Fácil" },
+                    intermedio: { time: 7, name: "Intermedio" },
+                    dificil: { time: 5, name: "Difícil" }
+                };
+
+                let currentLevel = 'facil';
+                let currentQuestions = [];
+                let currentQuestionIndex = 0;
+                let score = 0;
+                let timer;
+                
+                const startView = document.getElementById('quiz-start-view');
+                const gameView = document.getElementById('quiz-game-view');
+                const finalScoreView = document.getElementById('final-score-view');
+                
+                const difficultyTitle = document.getElementById('quiz-difficulty-title');
+                const startBtn = document.getElementById('start-quiz-btn');
+
+                const questionText = document.getElementById('quiz-question');
+                const optionsContainer = document.getElementById('answer-options');
+                const questionCounterText = document.getElementById('question-counter');
+                const finalScoreText = document.getElementById('final-score');
+                const timerBar = document.getElementById('timer-bar');
+                
+                document.getElementById('back-to-menu').addEventListener('click', () => { clearTimeout(timer); showView('menu'); });
+                document.getElementById('play-again-btn').addEventListener('click', () => initQuiz(currentLevel));
+                startBtn.addEventListener('click', startGame);
+
+                function initQuiz(level) {
+                    currentLevel = level;
+                    difficultyTitle.textContent = 'Nivel: ' + difficultySettings[level].name;
+                    startView.classList.remove('hidden');
+                    gameView.classList.add('hidden');
+                    finalScoreView.classList.add('hidden');
+                }
+
+                function startGame() {
+                    currentQuestionIndex = 0;
+                    score = 0;
+                    currentQuestions = shuffleArray([...allQuestions]).slice(0, 10);
+                    
+                    startView.classList.add('hidden');
+                    finalScoreView.classList.add('hidden');
+                    gameView.classList.remove('hidden');
+                    
+                    displayQuestion();
+                }
+
+                function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; }
+
+                function displayQuestion() {
+                    resetTimer();
+                    const question = currentQuestions[currentQuestionIndex];
+                    questionCounterText.textContent = 'Pregunta ' + (currentQuestionIndex + 1) + ' de ' + currentQuestions.length;
+                    questionText.textContent = question.q;
+                    optionsContainer.innerHTML = '';
+                    shuffleArray([...question.a]).forEach(answer => {
+                        const originalIndex = question.a.indexOf(answer);
+                        const button = document.createElement('button');
+                        button.textContent = answer;
+                        button.className = 'answer-btn';
+                        button.dataset.index = originalIndex;
+                        button.addEventListener('click', selectAnswer);
+                        optionsContainer.appendChild(button);
+                    });
+                    startTimer();
+                }
+
+                function startTimer() {
+                    let timeRemaining = difficultySettings[currentLevel].time;
+                    timerBar.style.width = '100%';
+                    timerBar.style.transition = 'width ' + timeRemaining + 's linear';
+                    
+                    setTimeout(() => { timerBar.style.width = '0%'; }, 100);
+
+                    timer = setTimeout(() => {
+                        selectAnswer(null); // Timeout counts as wrong answer
+                    }, timeRemaining * 1000);
+                }
+
+                function resetTimer() {
+                    clearTimeout(timer);
+                    timerBar.style.transition = 'none';
+                    timerBar.style.width = '100%';
+                }
+                
+                function selectAnswer(e) {
+                    resetTimer();
+                    const selectedButton = e ? e.target : null;
+                    const correctIndex = currentQuestions[currentQuestionIndex].correct;
+
+                    Array.from(optionsContainer.children).forEach(button => {
+                        button.classList.add('disabled');
+                        if (parseInt(button.dataset.index) === correctIndex) {
+                            button.classList.add('correct');
+                        }
+                    });
+
+                    if (selectedButton) {
+                        const selectedIndex = parseInt(selectedButton.dataset.index);
+                        if (selectedIndex === correctIndex) {
+                            score++;
+                        } else {
+                            selectedButton.classList.add('incorrect');
+                        }
+                    }
+
+                    setTimeout(() => {
+                        currentQuestionIndex++;
+                        if (currentQuestionIndex < currentQuestions.length) {
+                            displayQuestion();
+                        } else {
+                            showFinalScore();
+                        }
+                    }, 1500);
+                }
+
+                function showFinalScore() {
+                    gameView.classList.add('hidden');
+                    finalScoreView.classList.remove('hidden');
+                    finalScoreText.textContent = score + ' / ' + currentQuestions.length;
+                    const celebration = document.getElementById('celebration-container');
+                    if (celebration) {
+                        celebration.innerHTML = '';
+                        const items = ['🎉', '✨', '👍', '💚', '⭐', '💜'];
+                        for (let i = 0; i < 40; i++) {
+                            const el = document.createElement('div');
+                            el.className = 'celebration-element';
+                            el.textContent = items[Math.floor(Math.random() * items.length)];
+                            el.style.left = (Math.random() * 100) + 'vw';
+                            el.style.animationDelay = (Math.random() * 6) + 's';
+                            el.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                            celebration.appendChild(el);
+                        }
+                    }
+                }
+                
+                window.startQuiz = initQuiz;
+            })();
+            `
+        };
+
+        // --- LANZADORES DE JUEGOS ---
+        const launchers = [
+            { id: 'game-launcher-memorice', game: gameMemorice },
+            { id: 'game-launcher-unir', game: gameUnirImagenes },
+            { id: 'game-launcher-audio', game: gameAudioCuento }
+        ];
+
+        launchers.forEach(launcherInfo => {
+            const launcherElement = document.getElementById(launcherInfo.id);
+            if (launcherElement) {
+                launcherElement.addEventListener('click', () => loadGame(launcherInfo.game, launcherInfo.level));
+            }
+        });
+
+        function loadGame(gameObject, level = null) {
+            gameView.innerHTML = gameObject.html;
+            const gameScript = document.createElement('script');
+            gameScript.textContent = gameObject.script;
+            gameView.appendChild(gameScript);
+            
+            if (gameObject === gameQuiz && typeof window.startQuiz === 'function') {
+                window.startQuiz(level);
+            } else if (gameObject === gameOrdenaHistoria && typeof window.startOrdenarHistoria === 'function') {
+                window.startOrdenarHistoria(level);
+            } else if (gameObject === gameOrdenaCapitulos && typeof window.startOrdenarCapitulos === 'function') {
+                window.startOrdenarCapitulos(level);
+            }
+
+            showView('game');
+        }
+    </script>
+</body>
+</html>
